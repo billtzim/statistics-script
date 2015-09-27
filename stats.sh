@@ -42,7 +42,7 @@ showui()
 	rm -f ./parameters
 	COUNTER=1
 	CHECKLIST=""
-	SRVARRAY=(`echo 'select group_concat(distinct Service order by Service Asc SEPARATOR " ") from stat' | mysql -utemp_stats_user -p't3mp_st@ts!@#' -h db.ccf.auth.gr -N -D stats`)
+	SRVARRAY=(`echo 'select group_concat(distinct Service order by Service Asc SEPARATOR " ") from stat' | mysql -uUSER -pPASS -h DBSERVER -N -D stats`)
 	for i in ${SRVARRAY[*]}; do
     		CHECKLIST="$CHECKLIST $COUNTER $i off "
     		let COUNTER=COUNTER+1
@@ -54,7 +54,7 @@ showui()
 	#echo "ARRAY is: "${SelectedSrvs[*]}
 	for x in ${SelectedSrvs[*]}; do
 		#echo ${SRVARRAY[i-1]}
-	        METRICARRAY=(`echo 'select group_concat(distinct metric.id order by metric.id Asc SEPARATOR " ") from metric left join stat on metric.id=stat.metric where Service="'${SRVARRAY[x-1]}'";' | mysql -utemp_stats_user -p't3mp_st@ts!@#' -h db.ccf.auth.gr -N -D stats`)
+	        METRICARRAY=(`echo 'select group_concat(distinct metric.id order by metric.id Asc SEPARATOR " ") from metric left join stat on metric.id=stat.metric where Service="'${SRVARRAY[x-1]}'";' | mysql -uUSER -pPASS -h DBSERVER -N -D stats`)
 		COUNTER=1
 		CHECKLIST=""
 		for y in ${METRICARRAY[*]}; do
@@ -167,5 +167,5 @@ done
 if [ "$dry_run" == 1 ]; then
 	echo "DRY - "$query 
 else
-	echo $query | mysql -utemp_stats_user  -p't3mp_st@ts!@#' -D stats -h db.ccf.auth.gr
+	echo $query | mysql -uUSER  -pPASS -D stats -h DBSERVER
 fi
